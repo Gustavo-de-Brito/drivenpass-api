@@ -1,12 +1,15 @@
 import prisma from '../databases/postgres';
-import IUserAuth from '../types/authUserType';
+import { users } from '@prisma/client';
+import { UserAuth } from '../types/userType';
 
-export async function getUserByEmail(email: string) {
-  const userData = await prisma.users.findUnique({ where: { email }});
+export async function getUserByEmail(email: string): Promise<users | null> {
+  const userData: users | null = await prisma.users.findUnique(
+    { where: { email }}
+  );
 
   return userData;
 }
 
-export async function insert(newUser: IUserAuth) {
+export async function insert(newUser: UserAuth) {
   await prisma.users.create({ data: newUser });
 }
