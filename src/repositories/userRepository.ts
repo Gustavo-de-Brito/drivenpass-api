@@ -3,7 +3,9 @@ import { users } from '@prisma/client';
 import { UserAuth } from '../types/userType';
 
 export async function getUserByEmail(email: string): Promise<users | null> {
-  const userData: users | null = await prisma.users.findUnique({ where: { email }});
+  const userData: users | null = await prisma.users.findUnique(
+    { where: { email }}
+  );
 
   return userData;
 }

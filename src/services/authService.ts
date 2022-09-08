@@ -55,7 +55,12 @@ export async function loginUser(userData: UserAuth) {
   checkPassword(dbUser.password, userData.password);
 
   const JWT_PRIVATE_KEY: string = process.env.JWT_PRIVATE_KEY ?? '';
-  const token:string = jwt.sign({ userId: dbUser}, JWT_PRIVATE_KEY);
+  const EXPIRATION_TIME: number = 60 * 60 * 2;
+  const token:string = jwt.sign(
+    { userId: dbUser },
+    JWT_PRIVATE_KEY,
+    { expiresIn: EXPIRATION_TIME }
+  );
 
   return { token };
 }
