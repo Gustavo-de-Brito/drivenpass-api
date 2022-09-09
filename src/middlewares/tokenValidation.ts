@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { UserAuth } from '../types/userType';
 import * as authService from '../services/authService';
+import { users } from '@prisma/client';
 
 dotenv.config();
 
@@ -38,7 +38,7 @@ export async function verifyTokenDatabase(
   const indentificationData = res.locals.indentificationData;
 
   try {
-    const userData: UserAuth | null = await authService.getUserData(
+    const userData: users | null = await authService.getUserData(
       indentificationData.userId
     );
 
@@ -50,7 +50,6 @@ export async function verifyTokenDatabase(
 
     next();
   } catch(err) {
-    console.log(err);
     res.status(401).send('O token passado é inválido');
   }
 }

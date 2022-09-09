@@ -65,8 +65,8 @@ export async function loginUser(userData: UserAuth) {
   return { token };
 }
 
-export async function getUserData(userId: number) {
-  const userData: UserAuth | null = await userRepository.getUserById(
+export async function getUserData(userId: number): Promise<users | null> {
+  const userData: users | null = await userRepository.getUserById(
     userId
   );
 

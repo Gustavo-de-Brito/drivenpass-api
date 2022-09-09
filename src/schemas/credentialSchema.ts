@@ -13,7 +13,7 @@ const credentialSchema = joi.object(
   {
     title: joi.string().required(),
     url: joi.string().custom(validateUrl).required(),
-    userName: joi.string().required(),
+    username: joi.string().required(),
     password: joi.string().required()
   }
 );
