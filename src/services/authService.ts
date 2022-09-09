@@ -57,10 +57,18 @@ export async function loginUser(userData: UserAuth) {
   const JWT_PRIVATE_KEY: string = process.env.JWT_PRIVATE_KEY ?? '';
   const EXPIRATION_TIME: number = 60 * 60 * 2;
   const token:string = jwt.sign(
-    { userId: dbUser },
+    { userId: dbUser.id },
     JWT_PRIVATE_KEY,
     { expiresIn: EXPIRATION_TIME }
   );
 
   return { token };
+}
+
+export async function getUserData(userId: number): Promise<users | null> {
+  const userData: users | null = await userRepository.getUserById(
+    userId
+  );
+
+  return userData;
 }
