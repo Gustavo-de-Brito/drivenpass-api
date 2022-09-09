@@ -34,5 +34,38 @@ export async function createCredential(
 
   const encryptedPassword = encryptPassword(newCredential.password);
 
-  await credentialRepository.insert(newCredential, userId);
+  await credentialRepository.insert(
+    {
+      ...newCredential,
+      password: encryptedPassword
+    },
+    userId
+  );
+}
+
+function decryptCredentialsPassword(credentials: credentials[]) {
+  const CRYPTR_PRIVATE_KEY = process.env.CRYPTR_PRIVATE_KEY ?? ''; 
+  const cryptr = new Cryptr(CRYPTR_PRIVATE_KEY);
+  const decryptedCredentials: credentials[] = [];
+
+  for(const credential of credentials) {
+    const decryptedPassword: string = cryptr.decrypt(credential.password);
+
+    decryptedCredentials.push({...credential, password: decryptedPassword});
+  }
+
+  return decryptedCredentials;
+}
+
+export async function getAllUserCredentials(
+  userId: number
+): Promise<credentials[]> {
+  const credentials: credentials[] = 
+    await credentialRepository.getCredentialsByUserId(userId);
+
+  const decryptedCredentials: credentials[] = decryptCredentialsPassword(
+    credentials
+  );
+
+  return decryptedCredentials;
 }

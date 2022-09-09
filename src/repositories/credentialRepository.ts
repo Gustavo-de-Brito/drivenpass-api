@@ -19,3 +19,15 @@ export async function getCredentialByTitleAndUserid(
 export async function insert(credential: CredentialData, userId: number) {
   await prisma.credentials.create({ data: {...credential, userId}});
 }
+
+export async function getCredentialsByUserId(
+  userId: number
+): Promise<credentials[]> {
+  const credentials: credentials[] = await prisma.credentials.findMany(
+    {
+      where: { userId }
+    }
+  );
+
+  return credentials;
+}
