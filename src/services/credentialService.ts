@@ -34,5 +34,71 @@ export async function createCredential(
 
   const encryptedPassword = encryptPassword(newCredential.password);
 
-  await credentialRepository.insert(newCredential, userId);
+  await credentialRepository.insert(
+    {
+      ...newCredential,
+      password: encryptedPassword
+    },
+    userId
+  );
+}
+
+function decryptCredentialPassword(credential: credentials) {
+  const CRYPTR_PRIVATE_KEY = process.env.CRYPTR_PRIVATE_KEY ?? ''; 
+  const cryptr = new Cryptr(CRYPTR_PRIVATE_KEY);
+
+  const decryptedPassword: string = cryptr.decrypt(credential.password);
+  const decryptedCredential: credentials = {
+    ...credential,
+    password: decryptedPassword
+  };
+
+  return decryptedCredential;
+}
+
+export async function getAllUserCredentials(
+  userId: number
+): Promise<credentials[]> {
+  const credentials: credentials[] = 
+    await credentialRepository.getCredentialsByUserId(userId);
+
+  const decryptedCredentials: credentials[] = credentials.map(credential => {
+    const decryptedCredential: credentials = decryptCredentialPassword(
+      credential
+    );
+
+    return decryptedCredential;
+  });
+
+  return decryptedCredentials;
+}
+
+
+
+export async function getCredentialById(
+  credentialId: number,
+  userId: number
+): Promise<credentials> {
+  const credential: credentials | null = 
+    await credentialRepository.getCredentialById(credentialId);
+
+    if(!credential) {
+      throw {
+        code: 'not_found',
+        message: 'Os dados dessa credencial são inválidos'
+      }
+    }
+
+    if(credential.userId !== userId) {
+      throw {
+        code: 'unauthorized',
+        message: 'Você não tem acesso a essa credencial'
+      }
+    }
+
+    const decryptedCredential: credentials = decryptCredentialPassword(
+      credential
+    );
+
+    return decryptedCredential;
 }

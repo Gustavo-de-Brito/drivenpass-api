@@ -1,7 +1,13 @@
 import { Router } from 'express';
-import { tokenValidation, verifyTokenDatabase } from '../middlewares/tokenValidation';
+import { 
+  tokenValidation,
+  verifyTokenDatabase
+} from '../middlewares/tokenValidation';
 import credentialValidation from '../middlewares/credentialValidation';
-import { registerCredential } from '../controllers/credentialControllers';
+import { 
+  registerCredential,
+  getCredentials 
+} from '../controllers/credentialControllers';
 
 const credentialRouter = Router();
 
@@ -12,5 +18,12 @@ credentialRouter.post(
   credentialValidation,
   registerCredential
 );
+
+credentialRouter.get(
+  '/credentials',
+  tokenValidation,
+  verifyTokenDatabase,
+  getCredentials
+)
 
 export default credentialRouter;
