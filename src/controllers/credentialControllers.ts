@@ -24,13 +24,18 @@ export async function getCredentials(req: Request, res: Response) {
   try {
     if(isNaN(credentialId)) {
       const credentials: credentials[] = 
-      await credentialService.getAllUserCredentials(userData.id);
+        await credentialService.getAllUserCredentials(userData.id);
+
       res.status(200).send(credentials);
     } else {
+      const credential: credentials =
+        await credentialService.getCredentialById(credentialId, userData.id);
 
-      res.sendStatus(200);
+      res.status(200).send(credential);
     }
-  } catch {
+  } catch(err: any) {
+    if(err.code === 'not_found') return res.status(404).send(err.message);
+    else if(err.code === 'unauthorized') return res.status(401).send(err.message);
     res.sendStatus(500);
   }
 }

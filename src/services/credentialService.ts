@@ -43,18 +43,17 @@ export async function createCredential(
   );
 }
 
-function decryptCredentialsPassword(credentials: credentials[]) {
+function decryptCredentialPassword(credential: credentials) {
   const CRYPTR_PRIVATE_KEY = process.env.CRYPTR_PRIVATE_KEY ?? ''; 
   const cryptr = new Cryptr(CRYPTR_PRIVATE_KEY);
-  const decryptedCredentials: credentials[] = [];
 
-  for(const credential of credentials) {
-    const decryptedPassword: string = cryptr.decrypt(credential.password);
+  const decryptedPassword: string = cryptr.decrypt(credential.password);
+  const decryptedCredential: credentials = {
+    ...credential,
+    password: decryptedPassword
+  };
 
-    decryptedCredentials.push({...credential, password: decryptedPassword});
-  }
-
-  return decryptedCredentials;
+  return decryptedCredential;
 }
 
 export async function getAllUserCredentials(
@@ -63,9 +62,43 @@ export async function getAllUserCredentials(
   const credentials: credentials[] = 
     await credentialRepository.getCredentialsByUserId(userId);
 
-  const decryptedCredentials: credentials[] = decryptCredentialsPassword(
-    credentials
-  );
+  const decryptedCredentials: credentials[] = credentials.map(credential => {
+    const decryptedCredential: credentials = decryptCredentialPassword(
+      credential
+    );
+
+    return decryptedCredential;
+  });
 
   return decryptedCredentials;
+}
+
+
+
+export async function getCredentialById(
+  credentialId: number,
+  userId: number
+): Promise<credentials> {
+  const credential: credentials | null = 
+    await credentialRepository.getCredentialById(credentialId);
+
+    if(!credential) {
+      throw {
+        code: 'not_found',
+        message: 'Os dados dessa credencial são inválidos'
+      }
+    }
+
+    if(credential.userId !== userId) {
+      throw {
+        code: 'unauthorized',
+        message: 'Você não tem acesso a essa credencial'
+      }
+    }
+
+    const decryptedCredential: credentials = decryptCredentialPassword(
+      credential
+    );
+
+    return decryptedCredential;
 }
