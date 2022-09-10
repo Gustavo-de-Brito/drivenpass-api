@@ -26,7 +26,7 @@ export function tokenValidation(
     
     next();
   } catch {
-    res.status(401).send('Essa rota precisa de um token de acesso');
+    res.status(401).send('Token de acesso inválido');
   }
 }
 
