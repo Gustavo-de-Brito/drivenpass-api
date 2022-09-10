@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import { URL } from 'url';
 import credentialSchema from '../schemas/credentialSchema';
 
 async function credentialValidation(req: Request, res: Response, next: NextFunction) {
