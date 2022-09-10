@@ -4,7 +4,7 @@ import {
   verifyTokenDatabase
 } from '../middlewares/tokenValidation';
 import noteValidation from '../middlewares/noteValidation';
-import { registerNewNote } from '../controllers/noteControllers';
+import { registerNewNote, getNotes } from '../controllers/noteControllers';
 
 const noteRouter = Router();
 
@@ -15,5 +15,12 @@ noteRouter.post(
   noteValidation,
   registerNewNote
 );
+
+noteRouter.get(
+  '/notes',
+  tokenValidation,
+  verifyTokenDatabase,
+  getNotes
+)
 
 export default noteRouter;
