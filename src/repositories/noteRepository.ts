@@ -43,3 +43,7 @@ export async function getNoteById(
 export async function insert(note: NoteData, userId: number) {
   await prisma.notes.create({ data: {...note, userId}});
 }
+
+export async function deleteNote(noteId: number) {
+  await prisma.notes.delete({ where: { id: noteId }});
+}

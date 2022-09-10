@@ -4,7 +4,12 @@ import {
   verifyTokenDatabase
 } from '../middlewares/tokenValidation';
 import noteValidation from '../middlewares/noteValidation';
-import { registerNewNote, getNotes } from '../controllers/noteControllers';
+import {
+  registerNewNote,
+  getNotes,
+  deleteNote
+} from '../controllers/noteControllers';
+import paramsIdValidation from '../middlewares/paramsIdValidation';
 
 const noteRouter = Router();
 
@@ -21,6 +26,14 @@ noteRouter.get(
   tokenValidation,
   verifyTokenDatabase,
   getNotes
-)
+);
+
+noteRouter.delete(
+  '/notes/:id',
+  paramsIdValidation,
+  tokenValidation,
+  verifyTokenDatabase,
+  deleteNote
+);
 
 export default noteRouter;
