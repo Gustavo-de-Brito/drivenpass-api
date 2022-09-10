@@ -51,3 +51,24 @@ export async function getNoteById(
 
   return note;
 }
+
+export async function deleteNoteById(
+  noteId: number,
+  userId: number
+) {
+  const note: notes | null =
+    await noteRepository.getNoteById(noteId);
+
+  if(!note) {
+    throw {
+      code: 'not_found',
+      message: 'Você não possui uma nota com esse id'
+    };
+  } else if(note.userId !== userId) {
+    throw {
+      code: 'not_found',
+      message: 'Você não possui uma nota com esse id'
+    };
+  }
+  await noteRepository.deleteNote(noteId);
+}

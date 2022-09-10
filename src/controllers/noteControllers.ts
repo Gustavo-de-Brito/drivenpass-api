@@ -35,7 +35,20 @@ export async function getNotes(req: Request, res: Response) {
     }
   } catch(err: any) {
     if(err.code === 'not_found') return res.status(404).send(err.message);
-    else if(err.code === 'unauthorized') return res.status(401).send(err.message);
+    res.sendStatus(500);
+  }
+}
+
+export async function deleteNote(req: Request, res: Response) {
+  const noteId: number = parseInt(req.params.id);
+  const userData: users = res.locals.userData;
+
+  try {
+    await noteService.deleteNoteById(noteId, userData.id);
+
+    res.sendStatus(200);
+  } catch(err: any) {
+    if(err.code === 'not_found') return res.status(404).send(err.message);
     res.sendStatus(500);
   }
 }
