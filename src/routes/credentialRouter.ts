@@ -4,9 +4,11 @@ import {
   verifyTokenDatabase
 } from '../middlewares/tokenValidation';
 import credentialValidation from '../middlewares/credentialValidation';
+import paramsIdValidation from '../middlewares/paramsIdValidation';
 import { 
   registerCredential,
-  getCredentials 
+  getCredentials,
+  deleteCredential
 } from '../controllers/credentialControllers';
 
 const credentialRouter = Router();
@@ -24,6 +26,14 @@ credentialRouter.get(
   tokenValidation,
   verifyTokenDatabase,
   getCredentials
+);
+
+credentialRouter.delete(
+  '/credentials/:id',
+  paramsIdValidation,
+  tokenValidation,
+  verifyTokenDatabase,
+  deleteCredential
 )
 
 export default credentialRouter;

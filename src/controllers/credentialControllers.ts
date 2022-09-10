@@ -39,3 +39,17 @@ export async function getCredentials(req: Request, res: Response) {
     res.sendStatus(500);
   }
 }
+
+export async function deleteCredential(req: Request, res: Response) {
+  const credetnialId: number = parseInt(req.params.id);
+  const userData: users = res.locals.userData;
+
+  try {
+    await credentialService.deleteCredentialById(credetnialId, userData.id);
+
+    res.sendStatus(200);
+  } catch(err: any) {
+    if(err.code === 'unauthorized') return res.status(401).send(err.message);
+    res.sendStatus(500);
+  }
+}

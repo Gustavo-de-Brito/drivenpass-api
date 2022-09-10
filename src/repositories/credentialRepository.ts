@@ -43,3 +43,7 @@ export async function getCredentialById(
 export async function insert(credential: CredentialData, userId: number) {
   await prisma.credentials.create({ data: {...credential, userId}});
 }
+
+export async function deleteCredential(credentialId: number) {
+  await prisma.credentials.delete({ where: { id: credentialId }});
+}

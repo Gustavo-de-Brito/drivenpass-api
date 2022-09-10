@@ -73,8 +73,6 @@ export async function getAllUserCredentials(
   return decryptedCredentials;
 }
 
-
-
 export async function getCredentialById(
   credentialId: number,
   userId: number
@@ -101,4 +99,25 @@ export async function getCredentialById(
     );
 
     return decryptedCredential;
+}
+
+export async function deleteCredentialById(
+  credentialId: number,
+  userId: number
+) {
+  const credential: credentials | null =
+    await credentialRepository.getCredentialById(credentialId);
+
+  if(!credential) {
+    throw {
+      code: 'unauthorized',
+      message: 'Você não possui uma credencial com esse id'
+    };
+  } else if(credential.userId !== userId) {
+    throw {
+      code: 'unauthorized',
+      message: 'Você não possui uma credencial com esse id'
+    };
+  }
+  await credentialRepository.deleteCredential(credentialId);
 }
