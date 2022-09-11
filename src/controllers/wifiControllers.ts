@@ -39,3 +39,17 @@ export async function getWifis(req: Request, res: Response) {
     res.sendStatus(500);
   }
 }
+
+export async function deleteWifi(req: Request, res: Response) {
+  const wifiId: number = parseInt(req.params.id);
+  const userData: users = res.locals.userData;
+
+  try {
+    await wifiService.deleteWifiById(wifiId, userData.id);
+
+    res.sendStatus(200);
+  } catch(err: any) {
+    if(err.code === 'not_found') return res.status(401).send(err.message);
+    res.sendStatus(500);
+  }
+}

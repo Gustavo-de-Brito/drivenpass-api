@@ -7,7 +7,8 @@ import wifiValidation from '../middlewares/wifiValidation';
 import paramsIdValidation from '../middlewares/paramsIdValidation';
 import {
   registerNewWifi,
-  getWifis
+  getWifis,
+  deleteWifi
 } from '../controllers/wifiControllers';
 
 const wifiRouter: Router = Router();
@@ -25,6 +26,14 @@ wifiRouter.get(
   tokenValidation,
   verifyTokenDatabase,
   getWifis
+);
+
+wifiRouter.delete(
+  '/wifis/:id',
+  paramsIdValidation,
+  tokenValidation,
+  verifyTokenDatabase,
+  deleteWifi
 );
 
 export default wifiRouter;

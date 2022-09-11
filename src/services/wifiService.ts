@@ -74,3 +74,25 @@ export async function getWifiById(
       password: decryptedPassword
     };
 }
+
+export async function deleteWifiById(
+  wifiId: number,
+  userId: number
+) {
+  const wifi: wifiNetworks | null =
+    await wifiRepository.getWifiById(wifiId);
+
+  if(!wifi) {
+    throw {
+      code: 'not_found',
+      message: 'Você não possui uma rede wifi com esse id'
+    };
+  } else if(wifi.userId !== userId) {
+    throw {
+      code: 'not_found',
+      message: 'Você não possui uma rede wifi com esse id'
+    };
+  }
+
+  await wifiRepository.deleteWifi(wifiId);
+}
