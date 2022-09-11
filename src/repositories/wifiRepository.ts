@@ -29,3 +29,7 @@ export async function getWifiById(
 
   return wifi;
 }
+
+export async function deleteWifi(wifiId: number) {
+  await prisma.wifiNetworks.delete({ where: { id: wifiId }});
+}
