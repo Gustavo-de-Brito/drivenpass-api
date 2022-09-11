@@ -17,3 +17,26 @@ export async function registerNewCard(req: Request, res: Response) {
     res.sendStatus(500);
   }
 }
+
+export async function getCards(req: Request, res: Response) {
+  const cardId: number = Number(req.query.id);
+  const userData: users = res.locals.userData;
+
+  try {
+    if(isNaN(cardId)) {
+      const cards: cards[] = 
+        await cardService.getAllUserCards(userData.id);
+
+      res.status(200).send(cards);
+    } else {
+      const card: cards =
+        await cardService.getCardById(cardId, userData.id);
+
+      res.status(200).send(card);
+    }
+  } catch(err: any) {
+    if(err.code === 'not_found') return res.status(404).send(err.message);
+
+    res.sendStatus(500);
+  }
+}

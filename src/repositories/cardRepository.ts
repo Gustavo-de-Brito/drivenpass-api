@@ -19,3 +19,27 @@ export async function getCardByTitleAndUserid(
 export async function insert(card: CardData, userId: number) {
   await prisma.cards.create({ data: {...card, userId}});
 }
+
+export async function getCardsByUserId(
+  userId: number
+): Promise<cards[]> {
+  const cards: cards[] = await prisma.cards.findMany(
+    {
+      where: { userId }
+    }
+  );
+
+  return cards;
+}
+
+export async function getCardById(
+  cardId: number
+): Promise<cards | null> {
+  const card: cards | null = await prisma.cards.findUnique(
+    {
+      where: { id: cardId }
+    }
+  );
+
+  return card;
+}
