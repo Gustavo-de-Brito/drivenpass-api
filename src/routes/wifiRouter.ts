@@ -6,7 +6,8 @@ import {
 import wifiValidation from '../middlewares/wifiValidation';
 import paramsIdValidation from '../middlewares/paramsIdValidation';
 import {
-  registerNewWifi
+  registerNewWifi,
+  getWifis
 } from '../controllers/wifiControllers';
 
 const wifiRouter: Router = Router();
@@ -17,6 +18,13 @@ wifiRouter.post(
   verifyTokenDatabase,
   wifiValidation,
   registerNewWifi
+);
+
+wifiRouter.get(
+  '/wifis',
+  tokenValidation,
+  verifyTokenDatabase,
+  getWifis
 );
 
 export default wifiRouter;
