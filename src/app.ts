@@ -12,6 +12,4 @@ app.use(json());
 
 app.use(indexRouter)
 
-app.get('/', (req, res) => res.sendStatus(200));
-
 app.listen(process.env.PORT);
