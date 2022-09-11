@@ -10,10 +10,8 @@ export async function registerNewWifi(req: Request, res: Response) {
   try {
     await wifiService.createWifi(wifi, userData.id);
 
-    res.sendStatus(503);
+    res.sendStatus(201);
   } catch(err: any) {
-    if(err.code === 'conflict') return res.status(409).send(err.message);
-    console.log(err);
     res.sendStatus(500);
   }
 }
