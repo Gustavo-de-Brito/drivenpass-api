@@ -4,9 +4,11 @@ import {
   verifyTokenDatabase
 } from '../middlewares/tokenValidation';
 import cardValidation from '../middlewares/cardValidation';
+import paramsIdValidation from '../middlewares/paramsIdValidation';
 import {
   registerNewCard,
-  getCards
+  getCards,
+  deleteCard
 } from '../controllers/cardControllers';
 
 const cardRouter: Router = Router();
@@ -24,6 +26,14 @@ cardRouter.get(
   tokenValidation,
   verifyTokenDatabase,
   getCards
-)
+);
+
+cardRouter.delete(
+  '/cards/:id',
+  paramsIdValidation,
+  tokenValidation,
+  verifyTokenDatabase,
+  deleteCard
+);
 
 export default cardRouter;

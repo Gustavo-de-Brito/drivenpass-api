@@ -105,3 +105,25 @@ export async function getCardById(
       securityCode: decryptedSecurityCode
     };
 }
+
+export async function deleteCardById(
+  cardId: number,
+  userId: number
+) {
+  const card: cards | null =
+    await cardRepository.getCardById(cardId);
+
+  if(!card) {
+    throw {
+      code: 'not_found',
+      message: 'Você não possui um cartão com esse id'
+    };
+  } else if(card.userId !== userId) {
+    throw {
+      code: 'not_found',
+      message: 'Você não possui um cartão com esse id'
+    };
+  }
+
+  await cardRepository.deleteCard(cardId);
+}

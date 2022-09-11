@@ -40,3 +40,17 @@ export async function getCards(req: Request, res: Response) {
     res.sendStatus(500);
   }
 }
+
+export async function deleteCard(req: Request, res: Response) {
+  const cardId: number = parseInt(req.params.id);
+  const userData: users = res.locals.userData;
+
+  try {
+    await cardService.deleteCardById(cardId, userData.id);
+
+    res.sendStatus(200);
+  } catch(err: any) {
+    if(err.code === 'not_found') return res.status(404).send(err.message);
+    res.sendStatus(500);
+  }
+}
