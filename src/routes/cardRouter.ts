@@ -4,7 +4,10 @@ import {
   verifyTokenDatabase
 } from '../middlewares/tokenValidation';
 import cardValidation from '../middlewares/cardValidation';
-import { registerNewCard } from '../controllers/cardControllers';
+import {
+  registerNewCard,
+  getCards
+} from '../controllers/cardControllers';
 
 const cardRouter: Router = Router();
 
@@ -15,5 +18,12 @@ cardRouter.post(
   cardValidation,
   registerNewCard
 );
+
+cardRouter.get(
+  '/cards',
+  tokenValidation,
+  verifyTokenDatabase,
+  getCards
+)
 
 export default cardRouter;
