@@ -42,7 +42,10 @@ function signUp(req, res) {
             res.sendStatus(201);
         }
         catch (err) {
+<<<<<<< HEAD
             console.log(err);
+=======
+>>>>>>> 181e81d2c5f69006b2f595a88a69280171dff6c7
             if (err.code === 'conflict')
                 return res.status(409).send(err.message);
             res.sendStatus(500);

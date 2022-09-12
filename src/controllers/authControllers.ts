@@ -10,7 +10,6 @@ export async function signUp(req: Request, res: Response) {
 
     res.sendStatus(201);
   } catch(err: any) {
-    console.log(err)
     if(err.code === 'conflict') return res.status(409).send(err.message);
     res.sendStatus(500);
   }
