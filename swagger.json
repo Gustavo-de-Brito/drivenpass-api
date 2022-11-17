@@ -1,0 +1,181 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "DrivenPass API",
+    "description": "API para armazenar dados sensíveis do usuário, tal como dados de login, cartão de crédito, senha wifi, etc."
+  },
+  "paths": {
+    "/sign-up": {
+      "post": {
+        "summary": "Cadastro de usuário",
+        "tags": [ "Authentication" ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthUser"
+              },
+              "examples": {
+                "userSignUp": {
+                  "value": {
+                    "email": "someemail@email.com",
+                    "password": "my-secret-password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "409": {
+            "description": "email já cadastrado"
+          },
+          "500": {
+            "description": "Server Error"
+          },
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/sign-in": {
+      "post": {
+        "summary": "Login de usuário",
+        "tags": [ "Authentication" ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthUser"
+              },
+              "examples": {
+                "userSignUp": {
+                  "value": {
+                    "email": "someemail@email.com",
+                    "password": "my-secret-password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "401": {
+            "description": "os dados de login estão incorretos"
+          },
+          "500": {
+            "description": "Server Error"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/credentials": {
+      "post": {
+        "summary": "Registro de Credencial",
+        "tags": [ "Credentials" ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Credential"
+              },
+              "examples": {
+                "userSignUp": {
+                  "value": {
+                    "title": "minha credencial de login",
+                    "url": "https://mylogin.com",
+                    "username": "name-user",
+                    "password": "abc123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "401": {
+            "description": "Token inválido ou expirado"
+          },
+          "409": {
+            "description": "já existe uma credencial com esse título"
+          },
+          "500": {
+            "description": "Server Error"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AuthUser": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "Credential": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
