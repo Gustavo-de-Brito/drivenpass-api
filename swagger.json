@@ -95,6 +95,7 @@
       "post": {
         "summary": "Registro de Credencial",
         "tags": [ "Credentials" ],
+        "security": [ {"bearerAuth": []}],
         "requestBody": {
           "content": {
             "application/json": {
@@ -127,20 +128,78 @@
           "500": {
             "description": "Server Error"
           },
+          "201": {
+            "description": "Created"
+          }
+        }
+      },
+      "get": {
+        "summary": "Busca todas as credenciais de um usuáio",
+        "tags": [ "Credentials" ],
+        "security": [ {"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "ID da credencial",
+            "required": false
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Os dados dessa credencial são inválidos"
+          },
+          "500": {
+            "description": "Server Error"
+          },
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "token": {
-                      "type": "string"
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ArrayRegisteredCredentials"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RegisteredCredential"
                     }
-                  }
+                  ]
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/credentials/{id}": {
+      "delete": {
+        "summary": "Deleta a credencial de um usuáio",
+        "tags": [ "Credentials" ],
+        "security": [ {"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID da credencial",
+            "required": true
+          }       
+        ],
+        "responses": {
+          "422": {
+            "description": "valor de id inválido"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server Error"
+          },
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -175,6 +234,42 @@
             "type": "string"
           }
         }
+      },
+      "ArrayRegisteredCredentials": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/RegisteredCredential"
+        }
+      },
+      "RegisteredCredential": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }
