@@ -85,12 +85,10 @@ export async function getCredentialById(
         code: 'not_found',
         message: 'Os dados dessa credencial são inválidos'
       }
-    }
-
-    if(credential.userId !== userId) {
+    } else if(credential.userId !== userId) {
       throw {
         code: 'unauthorized',
-        message: 'Você não tem acesso a essa credencial'
+        message: 'Você não possui uma credencial com esse ID'
       }
     }
 
