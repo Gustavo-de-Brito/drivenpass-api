@@ -53,7 +53,7 @@
                 "$ref": "#/components/schemas/AuthUser"
               },
               "examples": {
-                "userSignUp": {
+                "userSignIn": {
                   "value": {
                     "email": "someemail@email.com",
                     "password": "my-secret-password"
@@ -103,7 +103,7 @@
                 "$ref": "#/components/schemas/Credential"
               },
               "examples": {
-                "userSignUp": {
+                "credential": {
                   "value": {
                     "title": "minha credencial de login",
                     "url": "https://mylogin.com",
@@ -134,7 +134,7 @@
         }
       },
       "get": {
-        "summary": "Busca todas as credenciais de um usuáio",
+        "summary": "Busca todas as credenciais de um usuário",
         "tags": [ "Credentials" ],
         "security": [ {"bearerAuth": []}],
         "parameters": [
@@ -177,7 +177,7 @@
     },
     "/credentials/{id}": {
       "delete": {
-        "summary": "Deleta a credencial de um usuáio",
+        "summary": "Deleta a credencial de um usuário",
         "tags": [ "Credentials" ],
         "security": [ {"bearerAuth": []}],
         "parameters": [
@@ -191,6 +191,120 @@
         "responses": {
           "422": {
             "description": "valor de id inválido"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server Error"
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/notes": {
+      "post": {
+        "summary": "Registro de Nota",
+        "tags": [ "Notes" ],
+        "security": [ {"bearerAuth": []}],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Note"
+              },
+              "examples": {
+                "note": {
+                  "value": {
+                    "title": "uma nota secreta",
+	                  "description": "informações confidenciais"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "401": {
+            "description": "Token inválido ou expirado"
+          },
+          "409": {
+            "description": "já existe uma nota com esse título"
+          },
+          "500": {
+            "description": "Server Error"
+          },
+          "201": {
+            "description": "Created"
+          }
+        }
+      },
+      "get": {
+        "summary": "Busca todas as notas de um usuário ou apenas uma pelo ID",
+        "tags": [ "Notes" ],
+        "security": [ {"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "ID da nota",
+            "required": false
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Você não possui uma nota com esse id"
+          },
+          "500": {
+            "description": "Server Error"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ArrayRegisteredNotes"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RegisteredNote"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notes/{id}": {
+      "delete": {
+        "summary": "Deleta a nota de um usuário",
+        "tags": [ "Notes" ],
+        "security": [ {"bearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID da nota",
+            "required": true
+          }       
+        ],
+        "responses": {
+          "422": {
+            "description": "valor de id inválido"
+          },
+          "404": {
+            "description": "Você não possui uma nota com esse id"
           },
           "401": {
             "description": "Unauthorized"
@@ -262,6 +376,40 @@
           "userId": {
             "type": "number"
           }
+        }
+      },
+      "Note": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "RegisteredNote": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "number"
+          }
+        }
+      },
+      "ArrayRegisteredNotes": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/RegisteredNote"
         }
       }
     },
